@@ -1,0 +1,77 @@
+import pandas as pd
+from matplotlib import pyplot as plt
+import numpy as np
+
+iris_data=pd.read_csv("iris_data.csv")
+
+print(iris_data)
+
+print(iris_data.keys())
+
+iris_data.head()
+
+iris_data.describe()
+
+iris_data['ID'] = "01"
+iris_data.head()
+
+iris_data = iris_data.drop(columns = ['ID'])
+iris_data.head()
+
+iris_data['Class'].value_counts()
+
+iris_data['Class'].value_counts().keys()
+
+plt.figure(figsize=(6,6))
+plt.bar(list(iris_data['Class'].value_counts().keys()),list(iris_data['Class'].value_counts()),color=["r","b","g"])
+plt.show()
+
+Class = ['Iris-versicolor','Iris-virginica','Iris-setosa']
+colors = ['cyan', 'magenta', 'gray']
+plt_1 = plt.figure(figsize=(10, 6))
+for i in range(3):
+    x = iris_data[iris_data['Class'] == Class[i]]
+    plt.scatter(x['sepal_length'], x['sepal_width'], c = colors[i], label=Class[i])
+plt.xlabel("sepal_length")
+plt.ylabel("sepal_width")
+plt.legend()
+
+Class = ['Iris-versicolor','Iris-virginica','Iris-setosa']
+colors = ['red', 'green', 'blue']
+plt_1 = plt.figure(figsize=(10, 6))
+for i in range(3):
+    x = iris_data[iris_data['Class'] == Class[i]]
+    plt.scatter(x['petal_length'], x['petal_width'], c = colors[i], label=Class[i])
+plt.xlabel("petal_length")
+plt.ylabel("petal_width")
+plt.legend()
+    
+ #importing sklearn
+from sklearn.preprocessing import LabelEncoder
+label = LabelEncoder()
+iris_data['Class'] = label.fit_transform(iris_data['Class'])
+iris_data.head()
+#it removes alpha numeric values
+
+#splitting test and train datasets
+from sklearn.model_selection import train_test_split
+
+a = iris_data.drop(columns=['Class'])
+b = iris_data['Class']
+
+from sklearn.linear_model import LogisticRegression
+logmodel = LogisticRegression(solver="liblinear")
+
+logmodel.fit(a_train , b_train)
+
+pred=logmodel.predict(a_test)
+
+from sklearn.metrics import classification_report
+classification_report(b_test,pred)
+
+from sklearn.metrics import confusion_matrix
+confusion_matrix(b_test,pred)
+
+from sklearn.metrics import accuracy_score
+print("Accuracy of Logistic Regression:", accuracy_score(b_test,pred)*100)
+
